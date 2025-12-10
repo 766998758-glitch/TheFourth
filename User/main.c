@@ -19,7 +19,9 @@ int main(void)
 	Timer_Init();
 	
 	OLED_ShowString(1, 1, "Pitch:");
-	OLED_ShowString(2, 1, "Yaw:");
+	OLED_ShowString(2, 1, "Roll:");
+	OLED_ShowString(3, 1, "Yaw:");
+
 	
 	while (1)
 	{
@@ -31,10 +33,12 @@ int main(void)
 			Angles_t angles = g_angles;
 			
 		  int16_t pitch_x100 = (int16_t)(angles.pitch * 100);
+		  int16_t roll_x100 = (int16_t)(angles.roll * 100);
       int16_t yaw_x100 = (int16_t)(angles.yaw * 100);
         
       OLED_ShowSignedNum(1, 7, pitch_x100, 3);
-      OLED_ShowSignedNum(2, 7, yaw_x100, 3);
+			OLED_ShowSignedNum(2, 7, roll_x100, 3);
+      OLED_ShowSignedNum(3, 7, yaw_x100, 3);
 		}
 	}
 }
