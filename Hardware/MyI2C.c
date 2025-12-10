@@ -5,19 +5,19 @@
 void My_I2C_W_SCL(uint8_t BitValue)
 {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_10, (BitAction)BitValue);
-	Delay_us(10);
+	Delay_us(5);
 }
 void My_I2C_W_SDA(uint8_t BitValue)
 {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_11, (BitAction)BitValue);
-	Delay_us(10);
+	Delay_us(5);
 }
 
 uint8_t My_I2C_R_SDA(void)
 {
 	uint8_t BitValue;
 	BitValue = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11);
-	Delay_us(10);
+	Delay_us(5);
 	return BitValue;
 }
 
@@ -106,15 +106,6 @@ uint8_t MYI2C_ReceiveAck(void)
 	My_I2C_W_SCL(0);
 	return AckBit;
 }
-
-
-
-
-
-
-
-
-
 
 
 

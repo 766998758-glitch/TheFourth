@@ -2,7 +2,8 @@
 #define __CALIBRATE_H
 
 
-
+void Calibrate(void);
+extern int16_t gyro_bias[3];
 
 
 

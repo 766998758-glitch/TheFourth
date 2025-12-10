@@ -263,6 +263,43 @@ void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
 	}
 }
 
+void OLED_ShowAngle(uint8_t Line, uint8_t Column, float Angle)
+{
+    int32_t value = (int32_t)(Angle * 100 + 0.5); // 放大100倍并四舍五入
+    
+    // 处理符号
+    if(value < 0)
+    {
+        OLED_ShowChar(Line, Column, '-');
+        value = -value;
+    }
+    else
+    {
+        OLED_ShowChar(Line, Column, '+');
+    }
+    
+    // 显示整数部分（最多3位）
+    OLED_ShowNum(Line, Column + 1, value / 100, 3);
+    
+    // 显示小数点
+    OLED_ShowChar(Line, Column + 4, '.');
+    
+    // 显示两位小数
+    uint8_t decimal = value % 100;
+    if(decimal < 10)
+    {
+        OLED_ShowChar(Line, Column + 5, '0');
+        OLED_ShowNum(Line, Column + 6, decimal, 1);
+    }
+    else
+    {
+        OLED_ShowNum(Line, Column + 5, decimal, 2);
+    }
+    
+    // 显示度符号（可选）
+    OLED_ShowChar(Line, Column + 7, 0xDF);
+}
+
 /**
   * @brief  OLED初始化
   * @param  无
