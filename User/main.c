@@ -5,6 +5,8 @@
 #include "AHRS.h"
 #include "MPU6050.h"
 #include "Calibrate.h"
+#include "AD.h"
+
 
 extern int16_t gyro_bias[3];
 volatile Angles_t g_angles;    //共享的角度数据
@@ -17,10 +19,15 @@ int main(void)
 	AHRS_Init();
 	Calibrate();
 	Timer_Init();
+	AD_Init();
 	
 	OLED_ShowString(1, 1, "Pitch:");
 	OLED_ShowString(2, 1, "Roll:");
 	OLED_ShowString(3, 1, "Yaw:");
+	
+//	OLED_ShowString(1, 1, "POT:");
+//	OLED_ShowString(2, 1, "NTC:");
+//	OLED_ShowString(3, 1, "LDR:");
 
 	
 	while (1)
@@ -32,13 +39,25 @@ int main(void)
 			//安全复制数据
 			Angles_t angles = g_angles;
 			
-		  int16_t pitch_x100 = (int16_t)(angles.pitch * 100);
-		  int16_t roll_x100 = (int16_t)(angles.roll * 100);
-      int16_t yaw_x100 = (int16_t)(angles.yaw * 100);
-        
-      OLED_ShowSignedNum(1, 7, pitch_x100, 3);
-			OLED_ShowSignedNum(2, 7, roll_x100, 3);
-      OLED_ShowSignedNum(3, 7, yaw_x100, 3);
+		   int16_t pitch_int = (int16_t)angles.pitch;
+       if(pitch_int > 180) pitch_int = 180;
+       if(pitch_int < -180) pitch_int = -180;
+       OLED_ShowSignedNum(1, 7, pitch_int, 3);
+            
+       int16_t roll_int = (int16_t)angles.roll;
+			 if(roll_int > 180) roll_int = 180;
+       if(roll_int < -180) roll_int = -180;
+       OLED_ShowSignedNum(2, 7, roll_int, 3);
+            
+           
+       int16_t yaw_int = (int16_t)angles.yaw;
+       OLED_ShowNum(3, 7, yaw_int, 4);  
+			
+		 
+//		OLED_ShowNum(1, 5, AD_Value[0], 4);
+//		OLED_ShowNum(2, 5, AD_Value[2], 4);
+//		OLED_ShowNum(3, 5, AD_Value[1], 4);
+		
 		}
 	}
 }
@@ -69,6 +88,6 @@ void TIM3_IRQHandler(void)
 				g_angles = AHRS_GetAngles();		
 			
 				//5.设置数据就绪标志
-				data_ready = 1;
+        data_ready = 1;
 		}
 }
